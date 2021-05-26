@@ -488,6 +488,7 @@ public class SqlSessionFactoryBean
     state((configuration == null && configLocation == null) || !(configuration != null && configLocation != null),
         "Property 'configuration' and 'configLocation' can not specified with together");
 
+    // 构建
     this.sqlSessionFactory = buildSqlSessionFactory();
   }
 
@@ -507,33 +508,45 @@ public class SqlSessionFactoryBean
     final Configuration targetConfiguration;
 
     XMLConfigBuilder xmlConfigBuilder = null;
+    // 如果已有全局配置类
     if (this.configuration != null) {
       targetConfiguration = this.configuration;
+      // 如果配置类中属性为空则将当前配置属性赋值
       if (targetConfiguration.getVariables() == null) {
         targetConfiguration.setVariables(this.configurationProperties);
-      } else if (this.configurationProperties != null) {
+      }
+      // 添加至全局配置类
+      else if (this.configurationProperties != null) {
         targetConfiguration.getVariables().putAll(this.configurationProperties);
       }
-    } else if (this.configLocation != null) {
+    }
+    // 否则如果xxxConfig.xml配置文件路径不为空，通过xml配置构建全局配置类
+    else if (this.configLocation != null) {
       xmlConfigBuilder = new XMLConfigBuilder(this.configLocation.getInputStream(), null, this.configurationProperties);
       targetConfiguration = xmlConfigBuilder.getConfiguration();
-    } else {
+    }
+    // 无配置 创建一个新的全局配置类，并设置配置属性
+    else {
       LOGGER.debug(
           () -> "Property 'configuration' or 'configLocation' not specified, using default MyBatis Configuration");
       targetConfiguration = new Configuration();
       Optional.ofNullable(this.configurationProperties).ifPresent(targetConfiguration::setVariables);
     }
 
+    // ########################### 到这一步肯定已经有全局配置类了 ###########################
+
     Optional.ofNullable(this.objectFactory).ifPresent(targetConfiguration::setObjectFactory);
     Optional.ofNullable(this.objectWrapperFactory).ifPresent(targetConfiguration::setObjectWrapperFactory);
     Optional.ofNullable(this.vfs).ifPresent(targetConfiguration::setVfsImpl);
 
+    // 如果有额外的类型别名包，则注册到全局配置类中
     if (hasLength(this.typeAliasesPackage)) {
       scanClasses(this.typeAliasesPackage, this.typeAliasesSuperType).stream()
           .filter(clazz -> !clazz.isAnonymousClass()).filter(clazz -> !clazz.isInterface())
           .filter(clazz -> !clazz.isMemberClass()).forEach(targetConfiguration.getTypeAliasRegistry()::registerAlias);
     }
 
+    // 如果有额外的类型别名，则注册到全局配置类中
     if (!isEmpty(this.typeAliases)) {
       Stream.of(this.typeAliases).forEach(typeAlias -> {
         targetConfiguration.getTypeAliasRegistry().registerAlias(typeAlias);
@@ -541,6 +554,7 @@ public class SqlSessionFactoryBean
       });
     }
 
+    // 如果有额外的插件，则注册到全局配置类中
     if (!isEmpty(this.plugins)) {
       Stream.of(this.plugins).forEach(plugin -> {
         targetConfiguration.addInterceptor(plugin);
@@ -548,12 +562,14 @@ public class SqlSessionFactoryBean
       });
     }
 
+    // 如果有额外的类型处理程序包，则注册到全局配置类中
     if (hasLength(this.typeHandlersPackage)) {
       scanClasses(this.typeHandlersPackage, TypeHandler.class).stream().filter(clazz -> !clazz.isAnonymousClass())
           .filter(clazz -> !clazz.isInterface()).filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
           .forEach(targetConfiguration.getTypeHandlerRegistry()::register);
     }
 
+    // 如果有额外的类型处理程序包，则注册到全局配置类中
     if (!isEmpty(this.typeHandlers)) {
       Stream.of(this.typeHandlers).forEach(typeHandler -> {
         targetConfiguration.getTypeHandlerRegistry().register(typeHandler);
@@ -561,8 +577,10 @@ public class SqlSessionFactoryBean
       });
     }
 
+    // 设置默认的枚举类型处理器
     targetConfiguration.setDefaultEnumTypeHandler(defaultEnumTypeHandler);
 
+    // 如果有额外的脚本语言驱动程序，则注册到全局配置类中
     if (!isEmpty(this.scriptingLanguageDrivers)) {
       Stream.of(this.scriptingLanguageDrivers).forEach(languageDriver -> {
         targetConfiguration.getLanguageRegistry().register(languageDriver);
@@ -580,8 +598,10 @@ public class SqlSessionFactoryBean
       }
     }
 
+    // 缓存
     Optional.ofNullable(this.cache).ifPresent(targetConfiguration::addCache);
 
+    // xml中解析出来
     if (xmlConfigBuilder != null) {
       try {
         xmlConfigBuilder.parse();
@@ -593,14 +613,17 @@ public class SqlSessionFactoryBean
       }
     }
 
+    // 设置环境
     targetConfiguration.setEnvironment(new Environment(this.environment,
         this.transactionFactory == null ? new SpringManagedTransactionFactory() : this.transactionFactory,
         this.dataSource));
 
+    // 如果xxxMapper.xml配置文件源不为空，通过xml配置构建解析mapper
     if (this.mapperLocations != null) {
       if (this.mapperLocations.length == 0) {
         LOGGER.warn(() -> "Property 'mapperLocations' was specified but matching resources are not found.");
-      } else {
+      }
+      else {
         for (Resource mapperLocation : this.mapperLocations) {
           if (mapperLocation == null) {
             continue;
@@ -621,6 +644,7 @@ public class SqlSessionFactoryBean
       LOGGER.debug(() -> "Property 'mapperLocations' was not specified.");
     }
 
+    // 构建
     return this.sqlSessionFactoryBuilder.build(targetConfiguration);
   }
 
@@ -629,6 +653,7 @@ public class SqlSessionFactoryBean
    */
   @Override
   public SqlSessionFactory getObject() throws Exception {
+    // 如果SqlSessionFactory为空则开始初始化
     if (this.sqlSessionFactory == null) {
       afterPropertiesSet();
     }
