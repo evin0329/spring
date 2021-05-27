@@ -75,6 +75,7 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
     notNull(this.mapperInterface, "Property 'mapperInterface' is required");
 
     Configuration configuration = getSqlSession().getConfiguration();
+    // 是否需要将Mapper接口添加到Mybatis 全局配置类中
     if (this.addToConfig && !configuration.hasMapper(this.mapperInterface)) {
       try {
         configuration.addMapper(this.mapperInterface);
@@ -92,6 +93,7 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
    */
   @Override
   public T getObject() throws Exception {
+    // 从sqlSession中获取Maper
     return getSqlSession().getMapper(this.mapperInterface);
   }
 
@@ -133,6 +135,10 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
   }
 
   /**
+   * 如果addToConfig为false，则映射器将不会添加到MyBatis。 这意味着它必须已经包含在mybatis-config.xml中。
+   * 如果为true，则在尚未注册的情况下，映射器将添加到MyBatis。
+   * 默认情况下，addToConfig为true。
+   *
    * If addToConfig is false the mapper will not be added to MyBatis. This means it must have been included in
    * mybatis-config.xml.
    * <p>
