@@ -308,6 +308,9 @@ public class MapperScannerConfigurer
     this.defaultScope = defaultScope;
   }
 
+
+
+
   /**
    * {@inheritDoc}
    */
@@ -331,10 +334,11 @@ public class MapperScannerConfigurer
    */
   @Override
   public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
+    // 处理属性占位符
     if (this.processPropertyPlaceHolders) {
       processPropertyPlaceHolders();
     }
-
+    // 类路径映射器扫描器
     ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
     scanner.setAddToConfig(this.addToConfig);
     scanner.setAnnotationClass(this.annotationClass);
@@ -389,6 +393,8 @@ public class MapperScannerConfigurer
       this.lazyInitialization = getPropertyValue("lazyInitialization", values);
       this.defaultScope = getPropertyValue("defaultScope", values);
     }
+
+    // 解析占位符
     this.basePackage = Optional.ofNullable(this.basePackage).map(getEnvironment()::resolvePlaceholders).orElse(null);
     this.sqlSessionFactoryBeanName = Optional.ofNullable(this.sqlSessionFactoryBeanName)
       .map(getEnvironment()::resolvePlaceholders).orElse(null);

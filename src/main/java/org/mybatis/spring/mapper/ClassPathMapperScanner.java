@@ -160,6 +160,8 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
   }
 
   /**
+   * 配置父扫描器以搜索正确的接口。 它可以搜索所有接口或仅搜索那些扩展标记接口或和那些用 annotationClass 注释的接口
+   *
    * Configures parent scanner to search for the right interfaces. It can search for all interfaces or just for those
    * that extends a markerInterface or/and those annotated with the annotationClass
    */
@@ -167,6 +169,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     boolean acceptAllInterfaces = true;
 
     // if specified, use the given annotation and / or marker interface
+    // 如果指定，则使用给定的注解和或标记接口
     if (this.annotationClass != null) {
       addIncludeFilter(new AnnotationTypeFilter(this.annotationClass));
       acceptAllInterfaces = false;
@@ -185,10 +188,11 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
     if (acceptAllInterfaces) {
       // default include filter that accepts all classes
+      // 接受所有类的默认包含过滤器
       addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
     }
 
-    // exclude package-info.java
+    // 排除 package-info.java
     addExcludeFilter((metadataReader, metadataReaderFactory) -> {
       String className = metadataReader.getClassMetadata().getClassName();
       return className.endsWith("package-info");

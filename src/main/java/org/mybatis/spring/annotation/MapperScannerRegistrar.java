@@ -82,6 +82,7 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
     BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MapperScannerConfigurer.class);
     builder.addPropertyValue("processPropertyPlaceHolders", true);
 
+    // 只需要使用了该注解的Mapper接口，（ps：首先我们扫描这个包可能有不需要映射的接口，那我们就可以通过注解（自定义的注解）的方式选出我们所需要的，没加注解的就不是这个类所需要的）
     Class<? extends Annotation> annotationClass = annoAttrs.getClass("annotationClass");
     if (!Annotation.class.equals(annotationClass)) {
       builder.addPropertyValue("annotationClass", annotationClass);

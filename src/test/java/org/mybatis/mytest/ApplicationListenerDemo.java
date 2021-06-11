@@ -1,18 +1,19 @@
 package org.mybatis.mytest;
 
+import org.mybatis.mytest.mapper.SsoUser;
+import org.mybatis.mytest.mapper.SsoUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 public class ApplicationListenerDemo implements org.springframework.context.ApplicationListener<ContextRefreshedEvent> {
 
   @Autowired
-  UserMapper userMapper;
+  SsoUserMapper userMapper;
 
 
   @Override
   public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-    User user = userMapper.getUser("1");
+    SsoUser user = userMapper.getById(1);
     System.out.println(user);
   }
 }
