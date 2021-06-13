@@ -425,9 +425,11 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
           SqlSessionTemplate.this.executorType, SqlSessionTemplate.this.exceptionTranslator);
       try {
         Object result = method.invoke(sqlSession, args);
+        // 是否由Spring管理事务
         if (!isSqlSessionTransactional(sqlSession, SqlSessionTemplate.this.sqlSessionFactory)) {
           // force commit even on non-dirty sessions because some databases require
           // a commit/rollback before calling close()
+          // 即使在非脏会话上也强制提交，因为某些数据库在调用 close() 之前需要提交回滚
           sqlSession.commit(true);
         }
         return result;

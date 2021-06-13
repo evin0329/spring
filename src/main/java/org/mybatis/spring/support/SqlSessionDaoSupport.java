@@ -41,6 +41,8 @@ public abstract class SqlSessionDaoSupport extends DaoSupport {
   private SqlSessionTemplate sqlSessionTemplate;
 
   /**
+   * 设置此 DAO 使用的 MyBatis SqlSessionFactory.将自动为给定的 SqlSessionFactory 创建 SqlSessionTemplate
+   *
    * Set MyBatis SqlSessionFactory to be used by this DAO. Will automatically create SqlSessionTemplate for the given
    * SqlSessionFactory.
    *
@@ -80,6 +82,8 @@ public abstract class SqlSessionDaoSupport extends DaoSupport {
   }
 
   /**
+   * 显式设置此 DAO 的 SqlSessionTemplate，作为指定 SqlSessionFactory 的替代方法。
+   *
    * Set the SqlSessionTemplate for this DAO explicitly, as an alternative to specifying a SqlSessionFactory.
    *
    * @param sqlSessionTemplate

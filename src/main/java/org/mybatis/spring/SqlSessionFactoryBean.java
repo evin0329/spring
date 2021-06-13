@@ -613,7 +613,7 @@ public class SqlSessionFactoryBean
       }
     }
 
-    // 设置环境
+    // 设置环境 事务管理器
     targetConfiguration.setEnvironment(new Environment(this.environment,
         this.transactionFactory == null ? new SpringManagedTransactionFactory() : this.transactionFactory,
         this.dataSource));

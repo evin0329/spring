@@ -1,28 +1,37 @@
 package org.mybatis.mytest;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan
+@MapperScan/*("aa", annotationClass= Mapper.class)*/
+@EnableTransactionManagement
 public class MybatisConfig {
 
   @Bean
   public DataSource dataSource() {
     DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
     driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-    driverManagerDataSource.setUrl("jdbc:mysql://10.250.43.107:3306/dev_gqsh_provider?useUnicode=true&serverTimezone=GMT");
-    driverManagerDataSource.setUsername("hwdev");
-    driverManagerDataSource.setPassword("3DGiuazc7wkAppV3");
-
+    driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&serverTimezone=GMT");
+    driverManagerDataSource.setUsername("root");
+    driverManagerDataSource.setPassword("123456");
     return driverManagerDataSource;
+  }
+
+  @Bean
+  public DataSourceTransactionManager dataSourceTransactionManager(){
+    return new DataSourceTransactionManager(dataSource());
   }
 
 

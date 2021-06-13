@@ -15,6 +15,8 @@
  */
 package org.mybatis.mytest.mapper;
 
+import java.util.Objects;
+
 /**
  * A simple bean that holds User info.
  */
@@ -23,6 +25,9 @@ public class User {
   private String id;
 
   private String name;
+  private String phone;
+  private String phoneNumber;
+  private Integer deleted;
 
   public String getId() {
     return id;
@@ -40,14 +45,38 @@ public class User {
     this.name = name;
   }
 
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public Integer getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Integer deleted) {
+    this.deleted = deleted;
+  }
+
   @Override
   public String toString() {
-    StringBuilder buf = new StringBuilder(30);
-    buf.append("{");
-    buf.append(id);
-    buf.append(", ");
-    buf.append(name);
-    buf.append("}");
-    return buf.toString();
+    return "User{" +
+      "id='" + id + '\'' +
+      ", name='" + name + '\'' +
+      ", phone='" + phone + '\'' +
+      ", phoneNumber='" + phoneNumber + '\'' +
+      ", deleted='" + deleted + '\'' +
+      '}';
   }
 }

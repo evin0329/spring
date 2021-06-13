@@ -205,12 +205,14 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
    */
   @Override
   public Set<BeanDefinitionHolder> doScan(String... basePackages) {
+    // 扫描Mapper文件并返回bean定义列表
     Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
 
     if (beanDefinitions.isEmpty()) {
       LOGGER.warn(() -> "No MyBatis mapper was found in '" + Arrays.toString(basePackages)
           + "' package. Please check your configuration.");
     } else {
+      //处理bean定义列表
       processBeanDefinitions(beanDefinitions);
     }
 
@@ -236,7 +238,9 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
       // the mapper interface is the original class of the bean
       // but, the actual class of the bean is MapperFactoryBean
+      //映射器接口是bean的原始类, 但, bean 的实际类是 MapperFactoryBean
       definition.getConstructorArgumentValues().addGenericArgumentValue(beanClassName); // issue #59
+      // 设置实际类为MapperFactoryBean
       definition.setBeanClass(this.mapperFactoryBeanClass);
 
       definition.getPropertyValues().add("addToConfig", this.addToConfig);
@@ -245,12 +249,14 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
       // https://github.com/mybatis/spring-boot-starter/issues/475
       definition.setAttribute(FACTORY_BEAN_OBJECT_TYPE, beanClassName);
 
+      // 使用显式工厂
       boolean explicitFactoryUsed = false;
       if (StringUtils.hasText(this.sqlSessionFactoryBeanName)) {
         definition.getPropertyValues().add("sqlSessionFactory",
             new RuntimeBeanReference(this.sqlSessionFactoryBeanName));
         explicitFactoryUsed = true;
-      } else if (this.sqlSessionFactory != null) {
+      }
+      else if (this.sqlSessionFactory != null) {
         definition.getPropertyValues().add("sqlSessionFactory", this.sqlSessionFactory);
         explicitFactoryUsed = true;
       }
@@ -263,7 +269,8 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         definition.getPropertyValues().add("sqlSessionTemplate",
             new RuntimeBeanReference(this.sqlSessionTemplateBeanName));
         explicitFactoryUsed = true;
-      } else if (this.sqlSessionTemplate != null) {
+      }
+      else if (this.sqlSessionTemplate != null) {
         if (explicitFactoryUsed) {
           LOGGER.warn(
               () -> "Cannot use both: sqlSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
@@ -299,10 +306,14 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
   }
 
   /**
+   *
+   * 这个方法用于判断是否是候选组件(Maaper接口)
+   *
    * {@inheritDoc}
    */
   @Override
   protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
+    // 接口 并且 独立
     return beanDefinition.getMetadata().isInterface() && beanDefinition.getMetadata().isIndependent();
   }
 

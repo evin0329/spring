@@ -110,7 +110,11 @@ public final class SqlSessionUtils {
   }
 
   /**
+   * 如果同步处于活动状态（即 Spring TX 处于活动状态），则注册会话持有者。
+   *
    * Register session holder if synchronization is active (i.e. a Spring TX is active).
+   *
+   * Note: 环境使用的数据源应该通过 DataSourceTxMgr 或另一个 tx 同步与事务同步。进一步假设，如果抛出异常，无论启动什么事务，都将处理关闭回滚与 SqlSession 关联的连接。
    *
    * Note: The DataSource used by the Environment should be synchronized with the transaction either through
    * DataSourceTxMgr or another tx synchronization. Further assume that if an exception is thrown, whatever started the
@@ -128,6 +132,7 @@ public final class SqlSessionUtils {
   private static void registerSessionHolder(SqlSessionFactory sessionFactory, ExecutorType executorType,
       PersistenceExceptionTranslator exceptionTranslator, SqlSession session) {
     SqlSessionHolder holder;
+    // Spring TX 处于活动状态
     if (TransactionSynchronizationManager.isSynchronizationActive()) {
       Environment environment = sessionFactory.getConfiguration().getEnvironment();
 
@@ -140,16 +145,19 @@ public final class SqlSessionUtils {
             .registerSynchronization(new SqlSessionSynchronization(holder, sessionFactory));
         holder.setSynchronizedWithTransaction(true);
         holder.requested();
-      } else {
+      }
+      else {
         if (TransactionSynchronizationManager.getResource(environment.getDataSource()) == null) {
           LOGGER.debug(() -> "SqlSession [" + session
               + "] was not registered for synchronization because DataSource is not transactional");
-        } else {
+        }
+        else {
           throw new TransientDataAccessResourceException(
               "SqlSessionFactory must be using a SpringManagedTransactionFactory in order to use Spring transaction synchronization");
         }
       }
-    } else {
+    }
+    else {
       LOGGER.debug(() -> "SqlSession [" + session
           + "] was not registered for synchronization because synchronization is not active");
     }
@@ -197,6 +205,8 @@ public final class SqlSessionUtils {
   }
 
   /**
+   * 返回作为参数传递的 {@code SqlSession} 是否由 Spring 管理
+   *
    * Returns if the {@code SqlSession} passed as an argument is being managed by Spring
    *
    * @param session
