@@ -145,19 +145,16 @@ public final class SqlSessionUtils {
             .registerSynchronization(new SqlSessionSynchronization(holder, sessionFactory));
         holder.setSynchronizedWithTransaction(true);
         holder.requested();
-      }
-      else {
+      } else {
         if (TransactionSynchronizationManager.getResource(environment.getDataSource()) == null) {
           LOGGER.debug(() -> "SqlSession [" + session
               + "] was not registered for synchronization because DataSource is not transactional");
-        }
-        else {
+        } else {
           throw new TransientDataAccessResourceException(
               "SqlSessionFactory must be using a SpringManagedTransactionFactory in order to use Spring transaction synchronization");
         }
       }
-    }
-    else {
+    } else {
       LOGGER.debug(() -> "SqlSession [" + session
           + "] was not registered for synchronization because synchronization is not active");
     }

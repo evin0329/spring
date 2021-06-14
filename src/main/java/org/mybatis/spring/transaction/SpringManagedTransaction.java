@@ -53,7 +53,7 @@ public class SpringManagedTransaction implements Transaction {
 
   private boolean autoCommit;
 
-  public  SpringManagedTransaction(DataSource dataSource) {
+  public SpringManagedTransaction(DataSource dataSource) {
     notNull(dataSource, "No DataSource specified");
     this.dataSource = dataSource;
   }

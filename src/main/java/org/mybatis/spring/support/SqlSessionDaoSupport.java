@@ -123,7 +123,7 @@ public abstract class SqlSessionDaoSupport extends DaoSupport {
    */
   @Override
   protected void checkDaoConfig() {
-    //重写父类方法，检查sqlSession模板是否不为空
+    // 重写父类方法，检查sqlSession模板是否不为空
     notNull(this.sqlSessionTemplate, "Property 'sqlSessionFactory' or 'sqlSessionTemplate' are required");
   }
 

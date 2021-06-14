@@ -414,6 +414,10 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
   }
 
   /**
+   * 代理需要将 MyBatis 方法调用路由到从 Spring 的事务管理器获得的正确 SqlSession
+   * 它还解开 {@code Methodinvoke(Object, Object...)} 抛出的异常以将 {@code PersistenceException}
+   * 传递给 {@code PersistenceExceptionTranslator} .
+   *
    * Proxy needed to route MyBatis method calls to the proper SqlSession got from Spring's Transaction Manager It also
    * unwraps exceptions thrown by {@code Method#invoke(Object, Object...)} to pass a {@code PersistenceException} to the
    * {@code PersistenceExceptionTranslator}.

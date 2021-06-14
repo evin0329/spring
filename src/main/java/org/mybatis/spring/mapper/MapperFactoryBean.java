@@ -135,8 +135,7 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
   }
 
   /**
-   * 如果addToConfig为false，则映射器将不会添加到MyBatis。 这意味着它必须已经包含在mybatis-config.xml中。
-   * 如果为true，则在尚未注册的情况下，映射器将添加到MyBatis。
+   * 如果addToConfig为false，则映射器将不会添加到MyBatis。 这意味着它必须已经包含在mybatis-config.xml中。 如果为true，则在尚未注册的情况下，映射器将添加到MyBatis。
    * 默认情况下，addToConfig为true。
    *
    * If addToConfig is false the mapper will not be added to MyBatis. This means it must have been included in

@@ -622,8 +622,7 @@ public class SqlSessionFactoryBean
     if (this.mapperLocations != null) {
       if (this.mapperLocations.length == 0) {
         LOGGER.warn(() -> "Property 'mapperLocations' was specified but matching resources are not found.");
-      }
-      else {
+      } else {
         for (Resource mapperLocation : this.mapperLocations) {
           if (mapperLocation == null) {
             continue;

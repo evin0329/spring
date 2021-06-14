@@ -15,8 +15,6 @@
  */
 package org.mybatis.mytest.mapper;
 
-import java.util.Objects;
-
 /**
  * A simple bean that holds User info.
  */
@@ -71,12 +69,7 @@ public class User {
 
   @Override
   public String toString() {
-    return "User{" +
-      "id='" + id + '\'' +
-      ", name='" + name + '\'' +
-      ", phone='" + phone + '\'' +
-      ", phoneNumber='" + phoneNumber + '\'' +
-      ", deleted='" + deleted + '\'' +
-      '}';
+    return "User{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", phone='" + phone + '\'' + ", phoneNumber='"
+        + phoneNumber + '\'' + ", deleted='" + deleted + '\'' + '}';
   }
 }
